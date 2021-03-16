@@ -38,7 +38,7 @@ class Chimes:
         current_energy = self.energy.get_energy()
         current_probability = self._get_probability_of_strike(current_energy)
 
-        print(f'{current_energy} -- {current_probability}')
+        print(f'{current_probability:.0%}')
 
 
 def chime_loop(chimes: Chimes, bpm=60, count=20, verbose=False):
@@ -62,6 +62,6 @@ def chime_loop(chimes: Chimes, bpm=60, count=20, verbose=False):
 
 
 if __name__ == '__main__':
-    energy = SystemEnergy()
+    energy = SystemEnergy(decay=0.5)
     chimes = Chimes(energy)
-    chime_loop(chimes=chimes, bpm=100, count=100, verbose=True)
+    chime_loop(chimes=chimes, bpm=200, count=100, verbose=False)

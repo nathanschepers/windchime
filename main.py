@@ -15,30 +15,30 @@ def get_gust():
     return random.choices(wind_forces, wind_probabilities)[0]
 
 
-def play_chime():
+def play_chimes():
     """
-    Plays the chime a single time.
+    Plays the chimes a single time.
     """
     print(f'{get_gust()}')
 
 
-# TODO: this looks like a candidate for functools.wraps
-#       https://stackoverflow.com/questions/10176226/how-do-i-pass-extra-arguments-to-a-python-decorator
-def chime_loop(bpm=60):
+def chime_loop(bpm=60, count=20, verbose=False):
     """
     The overall model/metronome loop. Manages tick drift and calls play_chime().
     """
     delay = d = 60 / bpm
     prev = perf_counter()
-    for _ in range(200):
+    for _ in range(count):
         sleep(d)
         t = perf_counter()
         delta = t - prev - delay
-        print(f'tick drift - {delta:+.9f}')
-        play_chime()
         d -= delta
         prev = t
 
+        if verbose:
+            print(f'tick drift - {delta:+.9f}')
+        play_chimes()
+
 
 if __name__ == '__main__':
-    chime_loop(bpm=200)
+    chime_loop(bpm=20, count=100, verbose=True)

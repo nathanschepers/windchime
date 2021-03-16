@@ -22,6 +22,7 @@ def play_chime():
     print(f'{get_gust()}')
 
 
+# TODO: this looks like a candidate for functools.wraps
 def chime_loop(bpm=60):
     """
     The overall model/metronome loop. Manages tick drift and calls play_chime().

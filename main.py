@@ -23,6 +23,7 @@ def play_chime():
 
 
 # TODO: this looks like a candidate for functools.wraps
+#       https://stackoverflow.com/questions/10176226/how-do-i-pass-extra-arguments-to-a-python-decorator
 def chime_loop(bpm=60):
     """
     The overall model/metronome loop. Manages tick drift and calls play_chime().

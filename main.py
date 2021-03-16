@@ -1,8 +1,12 @@
 import random
+from math import exp
 from time import perf_counter, sleep
 
 
 class SystemEnergy:
+    """
+    see docs/*pdf
+    """
     def __init__(self, wind_forces=None, wind_probabilities=None, decay=0.5):
         if wind_forces is None:
             wind_forces = [*range(0, 5)]
@@ -21,14 +25,23 @@ class SystemEnergy:
         return current_energy
 
 
-def play_chimes(system_energy: SystemEnergy):
-    """
-    Plays the chimes a single time.
-    """
-    print(f'{system_energy.get_energy()}')
+class Chimes:
+    def __init__(self, system_energy: SystemEnergy):
+        self.energy = system_energy
+
+    @staticmethod
+    def _get_probability_of_strike(system_energy: float):
+        fudge_constant = 99
+        return 1 / (1 + fudge_constant * exp(-2 * system_energy))
+
+    def play(self):
+        current_energy = self.energy.get_energy()
+        current_probability = self._get_probability_of_strike(current_energy)
+
+        print(f'{current_energy} -- {current_probability}')
 
 
-def chime_loop(system_energy: SystemEnergy, bpm=60, count=20, verbose=False):
+def chime_loop(chimes: Chimes, bpm=60, count=20, verbose=False):
     """
     The overall model/metronome loop. Manages tick drift and calls play_chime().
     https://stackoverflow.com/questions/51389691/how-can-i-do-a-precise-metronome
@@ -44,9 +57,11 @@ def chime_loop(system_energy: SystemEnergy, bpm=60, count=20, verbose=False):
 
         if verbose:
             print(f'tick drift - {delta:+.9f}')
-        play_chimes(system_energy=system_energy)
+
+        chimes.play()
 
 
 if __name__ == '__main__':
     energy = SystemEnergy()
-    chime_loop(system_energy=energy, bpm=100, count=100, verbose=False)
+    chimes = Chimes(energy)
+    chime_loop(chimes=chimes, bpm=100, count=100, verbose=True)
